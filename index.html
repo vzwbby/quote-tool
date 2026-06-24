@@ -3758,6 +3758,91 @@ function buildQuotePayload(empId, custName, custEmail) {
   };
 }
 
+// ── HTML Email Builder ───────────────────────────────────────
+function buildHtmlEmail(empId, custName, custEmail, notes, payload) {
+  var quoteDate = new Date().toLocaleDateString("en-US", {month:"long",day:"numeric",year:"numeric"});
+  var q = payload.quote;
+
+  var custSection = (custName || custEmail) ? (
+    '<div style="padding:16px 24px;border-bottom:1px solid #f3f4f6;">' +
+      '<div style="font-size:11px;font-weight:600;color:#9ca3af;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px">Prepared For</div>' +
+      (custName ? '<div style="font-size:16px;font-weight:600;color:#111827">' + custName + '</div>' : '') +
+      (custEmail ? '<div style="font-size:13px;color:#6b7280">' + custEmail + '</div>' : '') +
+    '</div>'
+  ) : '';
+
+  var linesHtml = q.lines.map(function(l, i) {
+    var details = [];
+    if (l.device) {
+      details.push('Device: ' + l.device.name + ' ' + l.device.storage);
+      if (l.device.promo_credit > 0) details.push('Trade-in credit: &minus;$' + l.device.promo_credit.toFixed(2) + '/mo');
+      if (l.device.monthly_payment > 0) details.push('Device payment: $' + l.device.monthly_payment.toFixed(2) + '/mo (' + l.device.finance_term + ' mo)');
+    }
+    l.perks.forEach(function(p) { details.push(p.name + ' (+$' + p.price.toFixed(2) + '/mo)'); });
+    l.promos.forEach(function(p) { details.push('🎁 ' + p.name); });
+    return '<div style="border:1px solid #e5e7eb;border-radius:8px;padding:14px 16px;margin-bottom:10px">' +
+      '<div style="display:flex;justify-content:space-between;align-items:center' + (details.length ? ';margin-bottom:8px' : '') + '">' +
+        '<div>' +
+          '<span style="background:#EE011E;color:#fff;border-radius:50%;width:20px;height:20px;display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;margin-right:8px;vertical-align:middle">' + (i+1) + '</span>' +
+          '<strong style="font-size:14px;color:#111827">' + l.name + '</strong>' +
+        '</div>' +
+        '<div style="font-size:12px;color:#6b7280;font-weight:500">' + l.plan + '</div>' +
+      '</div>' +
+      details.map(function(d) { return '<div style="font-size:12px;color:#374151;margin-left:28px;margin-bottom:2px">' + d + '</div>'; }).join('') +
+    '</div>';
+  }).join('');
+
+  var acctPromosHtml = q.account_promos && q.account_promos.length > 0 ? (
+    '<div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:12px 16px;margin-bottom:12px">' +
+      '<div style="font-size:11px;font-weight:600;color:#16a34a;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px">Account Promotions</div>' +
+      q.account_promos.map(function(p) { return '<div style="font-size:12px;color:#374151">&bull; ' + p.name + ': &minus;$' + p.monthly_credit.toFixed(2) + '/mo</div>'; }).join('') +
+    '</div>'
+  ) : '';
+
+  var safeNotes = notes ? notes.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;') : '';
+  var notesHtml = safeNotes ? (
+    '<div style="background:#fafafa;border-radius:8px;padding:14px 16px;margin-bottom:16px">' +
+      '<div style="font-size:11px;font-weight:600;color:#9ca3af;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px">Notes</div>' +
+      '<div style="font-size:13px;color:#374151;white-space:pre-wrap">' + safeNotes + '</div>' +
+    '</div>'
+  ) : '';
+
+  var disclaimer = 'This quote was given on ' + quoteDate + '. All promos and pricing are subject to change without notice. Promo credits may take 2&ndash;3 billing cycles to apply. If you have any questions about your bill or promotions, please reach out to your specialist &mdash; Verizon has different promotions than Best Buy and customer service may not be aware of your deals.';
+
+  return '<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>' +
+  '<body style="margin:0;padding:20px 0;background:#f3f4f6;font-family:-apple-system,BlinkMacSystemFont,\'Segoe UI\',Roboto,Helvetica,Arial,sans-serif">' +
+  '<div style="max-width:480px;margin:0 auto;background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,0.12)">' +
+    '<div style="background:#EE011E;padding:22px 24px;color:#fff">' +
+      '<div style="font-size:30px;font-weight:900;font-style:italic;letter-spacing:-1px;line-height:1">V.</div>' +
+      '<div style="font-size:20px;font-weight:700;margin-top:4px">Verizon Quote</div>' +
+      '<div style="font-size:12px;opacity:0.85;margin-top:4px">' + quoteDate + ' &nbsp;&middot;&nbsp; Specialist #' + empId + '</div>' +
+    '</div>' +
+    custSection +
+    '<div style="padding:20px 24px">' +
+      '<div style="font-size:11px;font-weight:600;color:#9ca3af;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:12px">' +
+        q.line_count + (q.line_count === 1 ? ' Line' : ' Lines') + ' &nbsp;&middot;&nbsp; ' + q.plan_label +
+      '</div>' +
+      linesHtml +
+      acctPromosHtml +
+      '<div style="background:#EE011E;border-radius:10px;padding:16px 20px;margin-top:4px;margin-bottom:6px">' +
+        '<table width="100%" cellpadding="0" cellspacing="0"><tr>' +
+          '<td style="color:#fff;font-size:14px;font-weight:600">Estimated Monthly</td>' +
+          '<td align="right" style="color:#fff;font-size:26px;font-weight:900;line-height:1">$' + q.total_monthly.toFixed(2) + '<span style="font-size:14px;font-weight:500;opacity:0.85">/mo</span></td>' +
+        '</tr></table>' +
+      '</div>' +
+      '<div style="font-size:11px;color:#9ca3af;text-align:center;margin-bottom:20px;line-height:1.5">Before taxes &amp; fees &nbsp;&middot;&nbsp; Includes AutoPay &amp; Paperless discount</div>' +
+      notesHtml +
+      '<div style="border-top:1px solid #f3f4f6;padding-top:14px">' +
+        '<div style="font-size:11px;color:#9ca3af;line-height:1.6">' + disclaimer + '</div>' +
+      '</div>' +
+    '</div>' +
+    '<div style="background:#f9fafb;padding:12px 24px;text-align:center;border-top:1px solid #f3f4f6">' +
+      '<div style="font-size:11px;color:#9ca3af">Best Buy &nbsp;&middot;&nbsp; Verizon Plan Advisor</div>' +
+    '</div>' +
+  '</div>' +
+  '</body></html>';
+}
+
 // ── Cookie helpers ──────────────────────────────────────────
 function setCookie(name, value, days) {
   var d = new Date();
@@ -3805,13 +3890,7 @@ function sendEmail() {
   var payload = buildQuotePayload(empId, custName, custEmail);
   var subject = "Verizon Quote | EMP: " + empId + (custName ? " | " + custName : "");
   var to = CONFIG.admin.routeEmail || "a1163505@bestbuy.com";
-  var summary = buildQuoteSummaryText();
-  var quoteDate = new Date().toLocaleDateString("en-US", {month:"long",day:"numeric",year:"numeric"});
-  var disclaimer = "This quote was given on " + quoteDate + ". All promos and pricing are subject to change without notice. Promo credits may take 2-3 billing cycles to apply. If you have any questions about your bill or promotions, please reach out to your specialist — Verizon has different promotions than Best Buy and customer service may not be aware of your deals.";
-
-  // Build full payload with notes and disclaimer
-  payload.notes = notes || "";
-  payload.disclaimer = disclaimer;
+  var htmlBody = buildHtmlEmail(empId, custName, custEmail, notes, payload);
 
   var btn = document.getElementById("email-send-btn");
   btn.textContent = "Sending…";
@@ -3830,7 +3909,7 @@ function sendEmail() {
         employee_id:    empId,
         customer_name:  custName || "(not provided)",
         customer_email: custEmail || "(not provided)",
-        payload:        "--- QUOTE SUMMARY ---\n" + summary + "\n\n--- NOTES ---\n" + (notes || "None") + "\n\n--- DISCLAIMER ---\n" + disclaimer + "\n\n--- DATA ---\n" + JSON.stringify(payload, null, 2)
+        html_body:      htmlBody
       }
     })
   }).then(function(res) {
