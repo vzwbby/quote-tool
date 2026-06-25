@@ -3280,7 +3280,7 @@ function renderCustomize() {
             ${phoneInfo ? `<div style="font-size:12px;color:var(--gray)">${phoneInfo}</div>` : ""}
             <div style="font-size:12px;color:var(--gray)">${dealLabel(l.deviceDeal)}</div>
           </div>
-          ${(()=>{ const _pp=calcLinePerkTotal(l.perkIds||[]); const _su=l.simpUpgrade?(CONFIG.simplicityUpgrades.find(x=>x.id===l.simpUpgrade)||{price:0}).price:0; const _ao=_pp+_su; const _base=CONFIG.simplicity.priceFullDiscount; return `<div style="text-align:right"><div class="tier-price">${fmt(_base+_ao)}</div>${_ao>0?`<div style="font-size:11px;color:var(--gray)">${fmt(_base)} plan + ${fmt(_ao)} add-ons</div>`:""}</div>`; })()}
+          ${(()=>{ const _pp=calcLinePerkTotal(l.perkIds||[]); const _su=l.simpUpgrade?(CONFIG.simplicityUpgrades.find(x=>x.id===l.simpUpgrade)||{price:0}).price:0; const _ao=_pp+_su; const _base=CONFIG.simplicity.priceFullDiscount; const _ft=l.financeTerm; const _sp=l.selectedPhone; let _dv=0; if(_ft&&_ft!=="frp"&&_sp&&_sp.capIdx!=null){const _ph=CONFIG.phones[_sp.phoneIdx];if(_ph){const _cap=_ph.capacities[_sp.capIdx];if(_cap){const _cr=calcPromoDeviceCredit(l);_dv=Math.max(0,_cap.p-_cr)/_ft;}}} return `<div style="text-align:right"><div class="tier-price">${fmt(_base+_ao+_dv)}</div>${(_ao>0||_dv>0)?`<div style="font-size:11px;color:var(--gray)">${fmt(_base)} plan${_ao>0?" + "+fmt(_ao)+" add-ons":""}${_dv>0?" + "+fmt(_dv)+" device":""}</div>`:""}</div>`; })()}
         </div>
         ${getSimpHotspotNoteHTML(l)}
 
@@ -3335,7 +3335,7 @@ function renderCustomize() {
             ${phoneInfo ? `<div style="font-size:12px;color:var(--gray)">${phoneInfo}</div>` : ""}
             <div style="font-size:12px;color:var(--gray)">${dealLabel(l.deviceDeal)}</div>
           </div>
-          ${(()=>{ const _pp=calcLinePerkTotal(l.perkIds||[]); const _ao=_pp; const _base=prices[tier]; return `<div style="text-align:right"><div class="tier-price">${fmt(_base+_ao)}</div>${_ao>0?`<div style="font-size:11px;color:var(--gray)">${fmt(_base)} plan + ${fmt(_ao)} add-ons</div>`:""}</div>`; })()}
+          ${(()=>{ const _pp=calcLinePerkTotal(l.perkIds||[]); const _ao=_pp; const _base=prices[tier]; const _ft=l.financeTerm; const _sp=l.selectedPhone; let _dv=0; if(_ft&&_ft!=="frp"&&_sp&&_sp.capIdx!=null){const _ph=CONFIG.phones[_sp.phoneIdx];if(_ph){const _cap=_ph.capacities[_sp.capIdx];if(_cap){const _cr=calcPromoDeviceCredit(l);_dv=Math.max(0,_cap.p-_cr)/_ft;}}} return `<div style="text-align:right"><div class="tier-price">${fmt(_base+_ao+_dv)}</div>${(_ao>0||_dv>0)?`<div style="font-size:11px;color:var(--gray)">${fmt(_base)} plan${_ao>0?" + "+fmt(_ao)+" add-ons":""}${_dv>0?" + "+fmt(_dv)+" device":""}</div>`:""}</div>`; })()}
         </div>
         <div class="tier-btns">
           <button class="tier-btn ${tier==="welcome"?"sel":""}" onclick="setLineTier(${i},'welcome')">Welcome<br><span style="font-size:11px;font-weight:400">${fmt(prices.welcome)}</span></button>
@@ -3684,14 +3684,14 @@ function buildQuoteSummaryText() {
       (l.selectedPlan==="welcome"?"Unlimited Welcome":l.selectedPlan==="plus"?"Unlimited Plus":"Unlimited Ultimate");
     const phone = getPhoneLabel(l.selectedPhone);
     const perks = l.perkIds.map(pid=>{const p=CONFIG.perks.individual.find(x=>x.id===pid);return p?p.name:null;}).filter(Boolean);
-    const promos = (CONFIG.promotions||[]).filter(p=>isPromoQualified(l,p.id)).map(p=>p.name);
+    const promos = (CONFIG.promotions||[]).filter(p=>isPromoQualified(l,p.id)&&(!p.applies?.planTypes||p.applies.planTypes.includes(pt))).map(p=>p.name);
     let line = l.name + ": " + tier;
     if (phone) line += "\n  Device: " + phone;
     if (perks.length) line += "\n  Add-ons: " + perks.join(", ");
     if (promos.length) line += "\n  Promos: " + promos.join(", ");
     return line;
   }).join("\n");
-  const acctPromos = (CONFIG.promotions||[]).filter(p=>p.scope==="account"&&state.lines.some(l=>isPromoQualified(l,p.id))).map(p=>"  • "+p.name+": -"+fmt(p.discount?.monthly||0)+"/mo").join("\n");
+  const acctPromos = (CONFIG.promotions||[]).filter(p=>p.scope==="account"&&(!p.applies?.planTypes||p.applies.planTypes.includes(pt))&&state.lines.some(l=>isPromoQualified(l,p.id))).map(p=>"  • "+p.name+": -"+fmt(p.discount?.monthly||0)+"/mo").join("\n");
   const planLabel = pt==="simplicity" ? "Simplicity" : "myPlan";
   const lineWord = state.lineCount > 1 ? "lines" : "line";
   return "Plan: " + planLabel + " · " + state.lineCount + " " + lineWord + "\n\n" + lines + (acctPromos ? "\n\nAccount Promos:\n" + acctPromos : "") + "\n\nEstimated Total: " + fmt(total) + "/mo\n(Before taxes & fees · includes AutoPay)";
@@ -3724,7 +3724,7 @@ function buildQuotePayload(empId, custName, custEmail) {
       }
     }
     const perks = l.perkIds.map(pid=>{const p=CONFIG.perks.individual.find(x=>x.id===pid);return p?{id:p.id,name:p.name,price:p.price}:null;}).filter(Boolean);
-    const promos = (CONFIG.promotions||[]).filter(p=>isPromoQualified(l,p.id)).map(p=>({
+    const promos = (CONFIG.promotions||[]).filter(p=>isPromoQualified(l,p.id)&&(!p.applies?.planTypes||p.applies.planTypes.includes(pt))).map(p=>({
       id:p.id, name:p.name,
       device_credit: p.type==="device"?(p.deviceDiscounts?.[device?.name]?.[tier]||0):0,
       monthly_credit: p.discount?.monthly||0,
@@ -3740,7 +3740,7 @@ function buildQuotePayload(empId, custName, custEmail) {
   })():null;
 
   const acctPromos=(CONFIG.promotions||[]).filter(p=>
-    p.scope==="account"&&p.discount?.monthly&&state.lines.some(l=>isPromoQualified(l,p.id))
+    p.scope==="account"&&p.discount?.monthly&&(!p.applies?.planTypes||p.applies.planTypes.includes(pt))&&state.lines.some(l=>isPromoQualified(l,p.id))
   ).map(p=>({id:p.id,name:p.name,monthly_credit:p.discount.monthly,label:p.discount.label||""}));
 
   return {
