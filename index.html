@@ -3888,9 +3888,9 @@ function sendEmail() {
   setCookie("empId", empId, 365);
 
   var payload = buildQuotePayload(empId, custName, custEmail);
+  payload.notes = notes || "";
   var subject = "Verizon Quote | EMP: " + empId + (custName ? " | " + custName : "");
   var to = CONFIG.admin.routeEmail || "a1163505@bestbuy.com";
-  var htmlBody = buildHtmlEmail(empId, custName, custEmail, notes, payload);
 
   var btn = document.getElementById("email-send-btn");
   btn.textContent = "Sending…";
@@ -3907,9 +3907,9 @@ function sendEmail() {
         to_email:       to,
         subject:        subject,
         employee_id:    empId,
-        customer_name:  custName || "(not provided)",
-        customer_email: custEmail || "(not provided)",
-        html_body:      htmlBody
+        customer_name:  custName || "",
+        customer_email: custEmail || "",
+        payload:        JSON.stringify(payload, null, 2)
       }
     })
   }).then(function(res) {
