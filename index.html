@@ -2434,7 +2434,20 @@ function pickLQ(field, val, el) {
 }
 
 function pickDeal(val, el) {
-  state.lines[state.currentLineIdx].deviceDeal = val;
+  const l = state.lines[state.currentLineIdx];
+  const prev = l.deviceDeal;
+  l.deviceDeal = val;
+  if (val === "retail") {
+    // Full Retail Price → default all finance terms to FRP
+    l.myplanFinanceTerm = "frp";
+    l.simpFinanceTerm = "frp";
+    l.financeTerm = "frp";
+  } else if (prev === "retail") {
+    // Switching away from retail — reset so step 4 can apply proper defaults
+    l.myplanFinanceTerm = null;
+    l.simpFinanceTerm = null;
+    l.financeTerm = null;
+  }
   el.closest("#lineq-content").querySelectorAll(".choice").forEach(b => b.classList.remove("sel"));
   el.classList.add("sel");
 }
@@ -3208,7 +3221,7 @@ function setFinanceTerm(lineIdx, term) {
   const pt = state.selectedPlanType;
   if (pt === "simplicity") {
     l.simpFinanceTerm = term;
-    if (term === "frp" || term === null) l.simpUpgrade = null; // upgrade requires financing
+    l.simpUpgrade = null; // financing and upgrade are mutually exclusive on Simplicity
   } else {
     l.myplanFinanceTerm = term;
   }
@@ -3280,13 +3293,13 @@ function renderCustomize() {
             ${phoneInfo ? `<div style="font-size:12px;color:var(--gray)">${phoneInfo}</div>` : ""}
             <div style="font-size:12px;color:var(--gray)">${dealLabel(l.deviceDeal)}</div>
           </div>
-          ${(()=>{ const _pp=calcLinePerkTotal(l.perkIds||[]); const _su=l.simpUpgrade?(CONFIG.simplicityUpgrades.find(x=>x.id===l.simpUpgrade)||{price:0}).price:0; const _ao=_pp+_su; const _base=CONFIG.simplicity.priceFullDiscount; const _ft=l.financeTerm; const _sp=l.selectedPhone; let _dv=0; if(_ft&&_ft!=="frp"&&_sp&&_sp.capIdx!=null){const _ph=CONFIG.phones[_sp.phoneIdx];if(_ph){const _cap=_ph.capacities[_sp.capIdx];if(_cap){const _cr=calcPromoDeviceCredit(l);_dv=Math.max(0,_cap.p-_cr)/_ft;}}} return `<div style="text-align:right"><div class="tier-price">${fmt(_base+_ao+_dv)}</div>${(_ao>0||_dv>0)?`<div style="font-size:11px;color:var(--gray)">${fmt(_base)} plan${_ao>0?" + "+fmt(_ao)+" add-ons":""}${_dv>0?" + "+fmt(_dv)+" device":""}</div>`:""}</div>`; })()}
+          ${(()=>{ const _pp=calcLinePerkTotal(l.perkIds||[]); const _su=l.simpUpgrade?(CONFIG.simplicityUpgrades.find(x=>x.id===l.simpUpgrade)||{price:0}).price:0; const _ao=_pp+_su; const _base=CONFIG.simplicity.priceFullDiscount; const _ft=l.financeTerm; const _sp=l.selectedPhone; let _dv=0; if(_ft&&_ft!=="frp"&&_sp&&_sp.capIdx!=null){const _ph=CONFIG.phones[_sp.phoneIdx];if(_ph){const _cap=_ph.capacities[_sp.capIdx];if(_cap){_dv=_cap.p/_ft;}}} return `<div style="text-align:right"><div class="tier-price">${fmt(_base+_ao+_dv)}</div>${(_ao>0||_dv>0)?`<div style="font-size:11px;color:var(--gray)">${fmt(_base)} plan${_ao>0?" + "+fmt(_ao)+" add-ons":""}${_dv>0?" + "+fmt(_dv)+" device":""}</div>`:""}</div>`; })()}
         </div>
         ${getSimpHotspotNoteHTML(l)}
 
         ${(()=>{
-          const _hasFinanced = l.deviceDeal !== "byod" && l.selectedPhone && l.selectedPhone.phoneIdx != null && l.selectedPhone.capIdx != null && l.simpFinanceTerm && l.simpFinanceTerm !== "frp";
-          if (!_hasFinanced) return "";
+          const _hasPhone = l.deviceDeal !== "byod" && l.selectedPhone && l.selectedPhone.phoneIdx != null && l.selectedPhone.capIdx != null;
+          if (!_hasPhone) return "";
           const _uph = CONFIG.phones[l.selectedPhone.phoneIdx];
           const _ucap = _uph && _uph.capacities[l.selectedPhone.capIdx];
           const _uprice = _ucap ? _ucap.p : 0;
@@ -3589,7 +3602,13 @@ function setLineTier(lineIdx, tier) {
 }
 
 function setSimpUpgrade(lineIdx, upgradeId) {
-  state.lines[lineIdx].simpUpgrade = upgradeId;
+  const l = state.lines[lineIdx];
+  l.simpUpgrade = upgradeId;
+  if (upgradeId !== null) {
+    // Upgrade and financing are mutually exclusive — clear both finance term fields
+    l.simpFinanceTerm = null;
+    l.financeTerm = null;
+  }
   renderCustomize();
 }
 
@@ -3615,7 +3634,7 @@ function calcLiveTotal() {
       if (_ph) {
         const _c = _ph.capacities[l.selectedPhone.capIdx];
         if (_c) {
-          const _credit = calcPromoDeviceCredit(l);
+          const _credit = pt !== "simplicity" ? calcPromoDeviceCredit(l) : 0;
           total += Math.max(0, _c.p - _credit) / l.financeTerm;
         }
       }
