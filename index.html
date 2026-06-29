@@ -84,6 +84,17 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .ws{font-size:15px;color:var(--gray);margin-top:8px;margin-bottom:36px}
 .back{display:inline-flex;align-items:center;gap:5px;font-size:14px;font-weight:700;color:var(--gray);background:none;border:none;cursor:pointer;padding:0;margin-bottom:16px}
 .hidden{display:none!important}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;display:flex;align-items:flex-end;justify-content:center}
+.modal-overlay.hidden{display:none!important}
+.modal-sheet{background:#fff;border-radius:20px 20px 0 0;width:100%;max-width:480px;max-height:90vh;display:flex;flex-direction:column;overflow:hidden}
+.modal-hdr{padding:16px 20px 12px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);flex-shrink:0}
+.modal-hdr-title{font-size:17px;font-weight:800}
+.modal-close{background:var(--lgray);border:none;border-radius:50%;width:32px;height:32px;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--gray)}
+.modal-body{overflow-y:auto;padding:16px 20px;flex:1}
+.tm-brand{font-size:13px;font-weight:800;color:var(--red);text-transform:uppercase;letter-spacing:.4px;margin-top:14px;margin-bottom:6px}
+.tm-brand:first-child{margin-top:0}
+.tm-devices{font-size:12px;color:var(--dark);line-height:1.7}
+.tm-t2{background:var(--lgray);border-radius:10px;padding:12px;font-size:13px;margin-top:14px}
 .mt2{margin-top:8px}.mt4{margin-top:16px}.mb4{margin-bottom:16px}
 .pill{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:800}
 .pill-r{background:var(--red);color:#fff}
@@ -193,7 +204,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 <div class="hdr">
   <span class="hdr-logo">V.</span>
   <span class="hdr-title" id="hdr-title">Plan Advisor</span>
-  <button class="hdr-gear" onclick="showAdminLogin()">⚙</button>
 </div>
 
 <!-- WELCOME -->
@@ -204,7 +214,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
     <div class="ws">Build a quote in under 2 minutes</div>
   </div>
   <button class="btn btn-red" onclick="go('s-lines')">Start New Quote</button>
-  <button class="btn btn-ghost mt2" onclick="showAdminLogin()">Admin / Settings ⚙</button>
 </div>
 
 <!-- STEP 1: LINE COUNT -->
@@ -1631,6 +1640,211 @@ let CONFIG = {
           "text": "Customer has NOT previously received a Best Buy exclusive discount on this Verizon account (once per account)"
         }
       ]
+    },
+    {
+      "id": "samsung-s26-standalone-409205",
+      "ost": "409205",
+      "name": "Samsung Galaxy S26 Series — Up to $1,119.99 Off",
+      "expires": "2026-07-29",
+      "tagline": "Up to $1,119.99 off select Galaxy S26 and Z Flip7 — new lines & AAL only, no trade-in required",
+      "scope": "line",
+      "type": "device",
+      "applies": {
+        "dealTypes": ["promo", "retail"],
+        "planTypes": ["myplan"]
+      },
+      "deviceDiscounts": {
+        "Galaxy S26 Ultra": { "ultimate": 1119.99, "plus": 1100,   "welcome": 900 },
+        "Galaxy S26+":      { "ultimate": 1100,    "plus": 1100,   "welcome": 900 },
+        "Galaxy Z Flip7":   { "ultimate": 739.99,  "plus": 559.99, "welcome": 379.99 },
+        "Galaxy S26":       { "ultimate": 900,     "plus": 900,    "welcome": 900 }
+      },
+      "questions": [
+        { "id": "q1", "text": "Transaction is new account, port-in, or add-a-line (NOT an upgrade)" },
+        { "id": "q2", "text": "Customer's account has no past due balance" }
+      ]
+    },
+    {
+      "id": "5g-smartphone-standalone-408466",
+      "ost": "408466",
+      "name": "5G Smartphones — Up to $830 Off",
+      "expires": "2026-07-29",
+      "tagline": "Off select 5G smartphones — new lines & AAL only, no trade-in required",
+      "scope": "line",
+      "type": "device",
+      "applies": {
+        "dealTypes": ["promo", "retail"],
+        "planTypes": ["myplan"]
+      },
+      "deviceDiscounts": {
+        "iPhone 17e":     { "ultimate": 600, "plus": 600, "welcome": 600 },
+        "iPhone 16":      { "ultimate": 730, "plus": 730, "welcome": 730 },
+        "iPhone 16 Plus": { "ultimate": 830, "plus": 830, "welcome": 830 },
+        "iPhone 15":      { "ultimate": 630, "plus": 630, "welcome": 630 },
+        "Galaxy S25":     { "ultimate": 800, "plus": 800, "welcome": 800 },
+        "Galaxy A17 5G":  { "ultimate": 200, "plus": 200, "welcome": 200 },
+        "Pixel 10a":      { "ultimate": 500, "plus": 500, "welcome": 500 },
+        "razr 2026":      { "ultimate": 800, "plus": 800, "welcome": 800 },
+        "moto g 2026":    { "ultimate": 280, "plus": 280, "welcome": 280 },
+        "edge 2026":      { "ultimate": 530, "plus": 530, "welcome": 530 }
+      },
+      "questions": [
+        { "id": "q1", "text": "Transaction is new account, port-in, or add-a-line (NOT an upgrade)" },
+        { "id": "q2", "text": "Customer's account has no past due balance" }
+      ]
+    },
+    {
+      "id": "google-pixel-flash-409190",
+      "ost": "409190",
+      "name": "Google Pixel 10 Flash Sale — Up to $1,000 Off",
+      "expires": "2026-07-29",
+      "tagline": "Up to $1,000 off Pixel 10 series — new lines & AAL only, no trade-in required",
+      "scope": "line",
+      "type": "device",
+      "applies": {
+        "dealTypes": ["promo", "retail"],
+        "planTypes": ["myplan"]
+      },
+      "deviceDiscounts": {
+        "Pixel 10":     { "ultimate": 800,  "plus": 619.99, "welcome": 439.99 },
+        "Pixel 10 Pro": { "ultimate": 1000, "plus": 1000,   "welcome": 1000 }
+      },
+      "questions": [
+        { "id": "q1", "text": "Transaction is new account, port-in, or add-a-line (NOT an upgrade)" },
+        { "id": "q2", "text": "Customer's account has no past due balance" }
+      ]
+    },
+    {
+      "id": "iphone-trade-408364",
+      "ost": "408364",
+      "name": "iPhone Trade-In Deal — Up to $830 Off",
+      "expires": "2026-07-31",
+      "tagline": "Up to $830 off select iPhones with eligible trade-in — new lines, AAL & upgrades",
+      "scope": "line",
+      "type": "tradein",
+      "applies": {
+        "dealTypes": ["promo", "retail"],
+        "planTypes": ["myplan"]
+      },
+      "tiers": {
+        "tier1": {
+          "iPhone 17 Pro Max": 830,
+          "iPhone 17 Pro":     830,
+          "iPhone Air":        830,
+          "iPhone 17":         830,
+          "iPhone 17e":        600
+        },
+        "tier2": {
+          "iPhone 17 Pro Max": 415,
+          "iPhone 17 Pro":     415,
+          "iPhone Air":        415,
+          "iPhone 17":         415,
+          "iPhone 17e":        415
+        }
+      },
+      "questions": [
+        { "id": "q1", "text": "Customer has an eligible trade-in device (any condition accepted)" },
+        { "id": "q2", "text": "For upgrades: trade-in device has been active on the account for 60+ consecutive days" },
+        { "id": "q3", "text": "Customer's account has no past due balance" }
+      ]
+    },
+    {
+      "id": "samsung-s26-trade-409208",
+      "ost": "409208",
+      "name": "Samsung S26 Series Trade-In — Up to $1,100 Off",
+      "expires": "2026-07-29",
+      "tagline": "Up to $1,100 off Galaxy S26 Ultra, S26+, Z Flip7 and S26 with eligible trade-in — new lines, AAL & upgrades",
+      "scope": "line",
+      "type": "tradein",
+      "applies": {
+        "dealTypes": ["promo", "retail"],
+        "planTypes": ["myplan"]
+      },
+      "tiers": {
+        "tier1": {
+          "Galaxy S26 Ultra": 1100,
+          "Galaxy S26+":      1100,
+          "Galaxy Z Flip7":   1100,
+          "Galaxy S26":       900
+        },
+        "tier2": {
+          "Galaxy S26 Ultra": 550,
+          "Galaxy S26+":      550,
+          "Galaxy Z Flip7":   550,
+          "Galaxy S26":       550
+        }
+      },
+      "questions": [
+        { "id": "q1", "text": "Customer has an eligible trade-in device (any condition accepted)" },
+        { "id": "q2", "text": "For upgrades: trade-in device has been active on the account for 60+ consecutive days" },
+        { "id": "q3", "text": "Customer's account has no past due balance" }
+      ]
+    },
+    {
+      "id": "samsung-trade-408482",
+      "ost": "408482",
+      "name": "Samsung Trade-In Deal — Up to $1,100 Off",
+      "expires": "2026-07-31",
+      "tagline": "Up to $1,100 off select Samsung smartphones with eligible trade-in — new lines, AAL & upgrades",
+      "scope": "line",
+      "type": "tradein",
+      "applies": {
+        "dealTypes": ["promo", "retail"],
+        "planTypes": ["myplan"]
+      },
+      "tiers": {
+        "tier1": {
+          "Galaxy S26 Ultra": 1100,
+          "Galaxy S26+":      1100,
+          "Galaxy Z Flip7":   1100,
+          "Galaxy S26":       900,
+          "Galaxy A17 5G":    200
+        },
+        "tier2": {
+          "Galaxy S26 Ultra": 550,
+          "Galaxy S26+":      550,
+          "Galaxy Z Flip7":   550,
+          "Galaxy S26":       550,
+          "Galaxy A17 5G":    200
+        }
+      },
+      "questions": [
+        { "id": "q1", "text": "Customer has an eligible trade-in device (any condition accepted)" },
+        { "id": "q2", "text": "For upgrades: trade-in device has been active on the account for 60+ consecutive days" },
+        { "id": "q3", "text": "Customer's account has no past due balance" }
+      ]
+    },
+    {
+      "id": "android-trade-408433",
+      "ost": "408433",
+      "name": "Android Trade-In Deal — Up to $1,000 Off",
+      "expires": "2026-07-29",
+      "tagline": "Up to $1,000 off select Google & Motorola smartphones with eligible trade-in — new lines, AAL & upgrades",
+      "scope": "line",
+      "type": "tradein",
+      "applies": {
+        "dealTypes": ["promo", "retail"],
+        "planTypes": ["myplan"]
+      },
+      "tiers": {
+        "tier1": {
+          "Pixel 10 Pro": 1000,
+          "Pixel 10":     800,
+          "razr 2026":    800,
+          "edge 2026":    530
+        },
+        "tier2": {
+          "Pixel 10 Pro": 500,
+          "Pixel 10":     500,
+          "razr 2026":    500,
+          "edge 2026":    500
+        }
+      },
+      "questions": [
+        { "id": "q1", "text": "Customer has an eligible trade-in device (any condition accepted)" },
+        { "id": "q2", "text": "For upgrades: trade-in device has been active on the account for 60+ consecutive days" },
+        { "id": "q3", "text": "Customer's account has no past due balance" }
+      ]
     }
   ],
   "phones": [
@@ -2517,7 +2731,7 @@ function freshLine(i) {
   return { name:"Line "+(i+1), hotspot:0, travel:0, deviceDeal:"byod",
            selectedPhone:null, selectedPlan:null,
            bundleId:null, perkIds:[], myplanPerkIds:[], simpPerkIds:[], simpUpgrade:null, financeTerm:null, myplanFinanceTerm:null, simpFinanceTerm:null,
-           promoAnswers:{} };
+           promoAnswers:{}, tradeInTier:null };
 }
 
 // ============================================================
@@ -2597,6 +2811,41 @@ const DEAL_OPTS = [
 ];
 const Q_LABELS = ["Hotspot Usage","International Travel","Phone Selection"];
 
+// ============================================================
+// TRADE MATRIX  (OST 408692, effective 4/2/26)
+// ============================================================
+const TRADE_MATRIX = {
+  tier1: [
+    { brand: "Apple", devices: "iPhone 13, iPhone 13 mini, iPhone 13 Pro, iPhone 13 Pro Max, iPhone 14, iPhone 14 Plus, iPhone 14 Pro, iPhone 14 Pro Max, iPhone 15, iPhone 15 Plus, iPhone 15 Pro, iPhone 15 Pro Max, iPhone 16, iPhone 16 Plus, iPhone 16 Pro, iPhone 16 Pro Max, iPhone 16e, iPhone 17, iPhone 17 Pro, iPhone 17 Pro Max, iPhone Air, iPhone 17e" },
+    { brand: "Samsung", devices: "Galaxy S21 FE 5G, Galaxy S22, Galaxy S22+, Galaxy S22 Ultra, Galaxy S23, Galaxy S23+, Galaxy S23 FE, Galaxy S23 Ultra, Galaxy S24, Galaxy S24+, Galaxy S24 Ultra, Galaxy S24 FE, Galaxy S25, Galaxy S25+, Galaxy S25 Ultra, Galaxy S25 Edge, Galaxy S25 FE, Galaxy S26, Galaxy S26+, Galaxy S26 Ultra, Galaxy Z Flip3, Galaxy Z Fold3, Galaxy Z Flip4, Galaxy Z Fold4, Galaxy Z Flip5, Galaxy Z Fold5, Galaxy Z Flip6, Galaxy Z Fold6, Galaxy Z Flip7, Galaxy Z Fold7" },
+    { brand: "Google", devices: "Pixel 6, Pixel 6a, Pixel 6 Pro, Pixel 7, Pixel 7 Pro, Pixel 7a, Pixel Fold, Pixel 8, Pixel 8 Pro, Pixel 8a, Pixel 9, Pixel 9 Pro, Pixel 9 Pro Fold, Pixel 9 Pro XL, Pixel 9a, Pixel 10, Pixel 10 Pro, Pixel 10 Pro Fold, Pixel 10 Pro XL, Pixel 10a" },
+    { brand: "Motorola", devices: "Moto razr, Moto razr 5G, Moto razr Plus 5G, Moto Razr 2022, Moto Razr 2023, Moto Razr 2024, Moto Razr Plus 2024, razr (2025), razr FIFA Edition, Motorola Razr Plus 2025, Razr Ultra 2025" },
+    { brand: "Microsoft", devices: "Surface Duo 2" }
+  ]
+};
+
+function showTradeMatrix() {
+  const brandsHTML = TRADE_MATRIX.tier1.map(b =>
+    `<div class="tm-brand">${b.brand}</div><div class="tm-devices">${b.devices}</div>`
+  ).join("");
+  document.getElementById("tm-content").innerHTML = brandsHTML;
+  document.getElementById("tm-search").value = "";
+  document.getElementById("trade-matrix-modal").classList.remove("hidden");
+}
+
+function hideTradeMatrix() {
+  document.getElementById("trade-matrix-modal").classList.add("hidden");
+}
+
+function filterTradeMatrix(val) {
+  const q = val.toLowerCase();
+  const rows = TRADE_MATRIX.tier1.map(b => {
+    const matches = b.devices.split(", ").filter(d => d.toLowerCase().includes(q));
+    return matches.length ? `<div class="tm-brand">${b.brand}</div><div class="tm-devices">${matches.join(", ")}</div>` : "";
+  }).join("");
+  document.getElementById("tm-content").innerHTML = rows || `<div style="color:var(--gray);font-size:13px;text-align:center;padding:20px">No Tier 1 match — device is Tier 2</div>`;
+}
+
 // Q0=hotspot, Q1=travel, Q2=deal, Q3=phone picker, Q4=financing (non-byod only)
 function getActivePromos() {
   const today = new Date().toISOString().slice(0, 10);
@@ -2605,10 +2854,21 @@ function getActivePromos() {
 
 function getEligiblePromos(line, lineIdx) {
   const idx = lineIdx !== undefined ? lineIdx : 0;
+  const ph = (line.selectedPhone != null && line.selectedPhone.phoneIdx != null)
+    ? CONFIG.phones[line.selectedPhone.phoneIdx] : null;
   return getActivePromos().filter(p => {
-    if (p.scope === "account" && idx > 0) return false; // account promos only on line 1
+    if (p.scope === "account" && idx > 0) return false;
     if (!p.applies) return true;
     if (p.applies.dealTypes && !p.applies.dealTypes.includes(line.deviceDeal)) return false;
+    // If a specific phone is selected, hide promos that don't cover it
+    if (ph) {
+      if (p.type === "device" && p.deviceDiscounts) {
+        if (!(ph.name in p.deviceDiscounts)) return false;
+      }
+      if (p.type === "tradein" && p.tiers) {
+        if (!(ph.name in (p.tiers.tier1 || {})) && !(ph.name in (p.tiers.tier2 || {}))) return false;
+      }
+    }
     return true;
   });
 }
@@ -2617,6 +2877,7 @@ function isPromoQualified(line, promoId) {
   const p = (CONFIG.promotions || []).find(x => x.id === promoId);
   const pa = (line.promoAnswers || {})[promoId] || {};
   if (!pa.applied) return false;
+  if (p && p.type === "tradein" && !line.tradeInTier) return false;
   if (!p || !p.questions || !p.questions.length) return pa.applied;
   return p.questions.every(q => pa[q.id]);
 }
@@ -2917,19 +3178,63 @@ function buildPromoStepHTML(line, lineIdx) {
       <div class="info-box">No active promotions available right now. Continue to see your quote.</div>`;
   }
 
+  // Trade-in tier selector — show if any eligible trade-in promos exist
+  const hasTradeIn = eligible.some(p => p.type === "tradein");
+  const tierSelectorHTML = hasTradeIn ? `
+    <div class="info-box" style="margin-bottom:14px">
+      <div style="font-size:13px;font-weight:800;margin-bottom:8px">Trade-In Device Tier</div>
+      <div style="font-size:12px;color:var(--gray);margin-bottom:10px">Select the trade-in tier. Tier 1 = newer/flagship, Tier 2 = older/mid-range. <button onclick="showTradeMatrix()" style="background:none;border:none;color:var(--red);font-size:12px;font-weight:700;cursor:pointer;padding:0;text-decoration:underline;text-underline-offset:2px">View Trade Matrix</button></div>
+      <div class="g2" style="gap:8px">
+        <button class="cap-btn ${line.tradeInTier==="tier1"?"sel":""}" onclick="setTradeInTier(${lineIdx},'tier1')" style="padding:10px 8px">
+          <div style="font-size:15px;font-weight:900">Tier 1</div>
+          <div style="font-size:11px;font-weight:400;margin-top:2px">Newer / flagship</div>
+        </button>
+        <button class="cap-btn ${line.tradeInTier==="tier2"?"sel":""}" onclick="setTradeInTier(${lineIdx},'tier2')" style="padding:10px 8px">
+          <div style="font-size:15px;font-weight:900">Tier 2</div>
+          <div style="font-size:11px;font-weight:400;margin-top:2px">Older / mid-range</div>
+        </button>
+      </div>
+    </div>` : "";
+
+  const selectedPhone = line.selectedPhone !== null && line.selectedPhone !== undefined
+    ? CONFIG.phones[line.selectedPhone.phoneIdx]
+    : null;
+
   const cards = eligible.map(p => {
     const pa = answers[p.id] || {};
     const isOn = !!pa.applied;
-    const allChecked = !p.questions || !p.questions.length || p.questions.every(q => pa[q.id]);
+
+    // For trade-in promos, also require tier selection to be "qualified"
+    const tierOk = p.type !== "tradein" || !!line.tradeInTier;
+    const allChecked = (!p.questions || !p.questions.length || p.questions.every(q => pa[q.id])) && tierOk;
     const isQualified = isOn && allChecked;
 
     const expiresStr = p.expires
       ? new Date(p.expires + "T12:00:00").toLocaleDateString("en-US", {month:"short", day:"numeric", year:"numeric"})
       : "";
 
+    // Build discount display
+    let discountHTML = "";
+    if (p.type === "tradein") {
+      if (line.tradeInTier && selectedPhone) {
+        const amt = p.tiers?.[line.tradeInTier]?.[selectedPhone.name];
+        discountHTML = amt
+          ? `<div class="promo-discount">$${amt.toFixed(2).replace(/\.00$/,"")} off</div>`
+          : `<div class="promo-note" style="color:var(--gray)">Not eligible for the selected device</div>`;
+      } else if (line.tradeInTier) {
+        discountHTML = `<div class="promo-note">Select a phone above to see your discount</div>`;
+      } else {
+        discountHTML = `<div class="promo-note">Select trade-in tier above to see discount</div>`;
+      }
+    } else if (p.discount) {
+      discountHTML = `<div class="promo-discount">${p.discount.label}</div>`;
+      if (p.discount.note) discountHTML += `<div class="promo-note">${p.discount.note}</div>`;
+    }
+
     const requirementsHTML = isOn && p.questions && p.questions.length ? `
       <div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border)">
         <div class="perk-section-title" style="margin-bottom:10px">Verify All Requirements</div>
+        ${p.type === "tradein" && !line.tradeInTier ? `<div style="background:#fffde7;border:1px solid var(--yellow);border-radius:8px;padding:9px;font-size:12px;margin-bottom:10px;text-align:center">Select trade-in tier above first</div>` : ""}
         ${p.questions.map(q => `
           <label style="display:flex;align-items:flex-start;gap:10px;margin-bottom:10px;cursor:pointer">
             <input type="checkbox" ${pa[q.id]?"checked":""} onchange="setPromoQ(${lineIdx},'${p.id}','${q.id}',this.checked)"
@@ -2946,8 +3251,7 @@ function buildPromoStepHTML(line, lineIdx) {
         <div style="flex:1">
           <div class="promo-name">${p.name}</div>
           <div class="promo-tagline">${p.tagline || ""}</div>
-          ${p.discount ? `<div class="promo-discount">${p.discount.label}</div>` : ""}
-          ${p.discount && p.discount.note ? `<div class="promo-note">${p.discount.note}</div>` : ""}
+          ${discountHTML}
           ${expiresStr ? `<div class="promo-expires">Expires ${expiresStr}</div>` : ""}
           ${p.ost ? `<div class="promo-expires">OST # ${p.ost}</div>` : ""}
         </div>
@@ -2961,7 +3265,14 @@ function buildPromoStepHTML(line, lineIdx) {
 
   return `<div class="sh">Promotions</div>
     <div class="ss">Check available promotions for ${line.name}</div>
+    ${tierSelectorHTML}
     ${cards}`;
+}
+
+function setTradeInTier(lineIdx, tier) {
+  const l = state.lines[lineIdx];
+  l.tradeInTier = l.tradeInTier === tier ? null : tier;
+  buildLineQ();
 }
 
 function toggleLinePromo(lineIdx, promoId) {
@@ -3088,20 +3399,55 @@ function adjDevice(type, delta) {
 // ============================================================
 function nKey(n) { return n >= 4 ? "4+" : n; }
 
+function getBestDevicePromo(line) {
+  // Returns the best qualified device promo for this line.
+  // Standalone (no trade-in required) promos are always preferred over trade-in promos
+  // when they offer any credit — only fall back to trade-in if no standalone qualifies.
+  if (!line.selectedPhone || line.selectedPhone.phoneIdx == null) return null;
+  const ph = CONFIG.phones[line.selectedPhone.phoneIdx];
+  if (!ph) return null;
+  const tier = line.selectedPlan || "welcome";
+  const today = new Date().toISOString().slice(0, 10);
+  let bestStandalone = null, bestStandaloneAmt = 0;
+  let bestTradeIn = null, bestTradeInAmt = 0;
+  (CONFIG.promotions || []).forEach(p => {
+    if (p.type !== "device" && p.type !== "tradein") return;
+    if (p.expires && p.expires < today) return;
+    if (!isPromoQualified(line, p.id)) return;
+    const amt = p.type === "tradein"
+      ? (p.tiers?.[line.tradeInTier]?.[ph.name] || 0)
+      : (p.deviceDiscounts?.[ph.name]?.[tier] || 0);
+    if (p.type === "device") {
+      // Score standalone by max credit across all plan tiers (not just current) so a
+      // promo that gives $0 on Welcome but $900 on Plus still registers as a candidate
+      const maxAmt = Math.max(
+        p.deviceDiscounts?.[ph.name]?.welcome || 0,
+        p.deviceDiscounts?.[ph.name]?.plus    || 0,
+        p.deviceDiscounts?.[ph.name]?.ultimate || 0
+      );
+      if (maxAmt > bestStandaloneAmt) { bestStandaloneAmt = maxAmt; bestStandalone = p; }
+    }
+    if (p.type === "tradein" && amt > bestTradeInAmt) { bestTradeInAmt = amt; bestTradeIn = p; }
+  });
+  // Always prefer standalone (no trade-in required) when one is qualified for this phone.
+  // The actual credit at the current plan tier may be $0 (e.g. standalone only applies on Plus/Ultimate)
+  // but that's intentional — it signals the rep to discuss moving up a tier.
+  if (bestStandalone) return bestStandalone;
+  return bestTradeIn;
+}
+
 function calcPromoDeviceCredit(line) {
-  // Returns total dollar device credit from qualified device-type promos on this line
+  // Returns device credit from the single best qualified device promo (non-stackable)
   if (line.deviceDeal !== "promo" && line.deviceDeal !== "retail") return 0;
   if (!line.selectedPhone || line.selectedPhone.capIdx == null) return 0;
   const ph = CONFIG.phones[line.selectedPhone.phoneIdx];
   if (!ph) return 0;
   const tier = line.selectedPlan || "welcome";
-  const today = new Date().toISOString().slice(0, 10);
-  return (CONFIG.promotions || []).reduce((sum, p) => {
-    if (p.type !== "device") return sum;
-    if (p.expires && p.expires < today) return sum;
-    if (!isPromoQualified(line, p.id)) return sum;
-    return sum + (p.deviceDiscounts?.[ph.name]?.[tier] || 0);
-  }, 0);
+  const best = getBestDevicePromo(line);
+  if (!best) return 0;
+  return best.type === "tradein"
+    ? (best.tiers?.[line.tradeInTier]?.[ph.name] || 0)
+    : (best.deviceDiscounts?.[ph.name]?.[tier] || 0);
 }
 
 function calcDeviceDiscount(planKey, tablets, watches, slots) {
@@ -3394,8 +3740,27 @@ function buildResults(anyPromo) {
         ${devNote?`<div style="color:var(--gray);font-size:11px">${devNote}</div>`:""}
         ${upgradeNote?`<div style="color:var(--gray);font-size:11px">${upgradeNote}</div>`:""}
         ${(()=>{
-          const qp=(CONFIG.promotions||[]).filter(p=>p.scope!=="account"&&isPromoQualified(l,p.id)&&(!p.applies?.planTypes||p.applies.planTypes.includes(key)));
-          return qp.length?qp.map(p=>`<div style="color:#16a34a;font-size:11px;font-weight:700">✓ ${p.name} <span style="font-weight:400">(-${fmt(p.discount?.monthly||0)}/mo)</span></div>`).join(""):"";
+          const ph = l.selectedPhone != null && l.selectedPhone.phoneIdx != null ? CONFIG.phones[l.selectedPhone.phoneIdx] : null;
+          const planTier = l.selectedPlan || "welcome";
+          // Best device promo (non-stackable — only the highest-value one)
+          const bestDev = key !== "simplicity" ? getBestDevicePromo(l) : null;
+          // Monthly credit promos (these stack separately)
+          const monthlys = (CONFIG.promotions||[]).filter(p=>
+            p.scope!=="account" && isPromoQualified(l,p.id) &&
+            (!p.applies?.planTypes||p.applies.planTypes.includes(key)) &&
+            p.discount?.monthly
+          );
+          let html = "";
+          if (bestDev) {
+            const amt = bestDev.type === "tradein"
+              ? (bestDev.tiers?.[l.tradeInTier]?.[ph?.name] || 0)
+              : (bestDev.deviceDiscounts?.[ph?.name]?.[planTier] || 0);
+            html += `<div style="color:#16a34a;font-size:11px;font-weight:700">✓ ${bestDev.name} <span style="font-weight:400">(-${fmt(amt)} device credit)</span></div>`;
+          }
+          monthlys.forEach(p => {
+            html += `<div style="color:#16a34a;font-size:11px;font-weight:700">✓ ${p.name} <span style="font-weight:400">(-${fmt(p.discount.monthly)}/mo)</span></div>`;
+          });
+          return html;
         })()}
       </div>`;
     }).join("");
@@ -3452,9 +3817,19 @@ function buildResults(anyPromo) {
     const simpDiff = sq.grandTotal < mq.grandTotal ? ` Simplicity costs ${fmt(diff)}/mo less but does not include international data.` : "";
     why = `<strong>myPlan recommended:</strong> At least one line needs international data, which is included on the Ultimate tier.${simpDiff}`;
   } else {
-    // Simplicity is Best Fit — explain the difference
-    const cheaper = cheapKey === "simplicity" ? `Simplicity costs ${fmt(diff)}/mo less. ` : (diff < 1 ? "Both plans are similarly priced. " : `myPlan costs ${fmt(diff)}/mo less, but `);
-    why = `${cheaper}Simplicity is the simpler, all-inclusive plan — no tier decisions, 10 GB hotspot built in, and flexible financing terms. myPlan is worth considering if the customer may want a device promo in the future.`;
+    // Check if any line has an active device promo credit driving myPlan's lower price
+    const hasDevicePromos = state.lines.some(l => getBestDevicePromo(l) !== null);
+    if (cheapKey === "myplan" && hasDevicePromos) {
+      // myPlan is cheaper, but only because of temporary promo credits
+      const simpPerLine = fmt(CONFIG.simplicity.priceFullDiscount);
+      why = `myPlan costs ${fmt(diff)}/mo less right now, but that savings includes device promotion credits (BICs) that expire after 36 months. Once the promotion ends, Simplicity is ${simpPerLine}/line with no promotion required — a permanent, all-inclusive rate.`;
+    } else if (cheapKey === "simplicity") {
+      why = `Simplicity costs ${fmt(diff)}/mo less. Simplicity is the simpler, all-inclusive plan — no tier decisions, 10 GB hotspot built in, and flexible financing terms. myPlan is worth considering if the customer may want a device promo in the future.`;
+    } else if (diff < 1) {
+      why = `Both plans are similarly priced. Simplicity is the simpler, all-inclusive option — no tier decisions and 10 GB hotspot built in. myPlan offers more flexibility and device promos.`;
+    } else {
+      why = `myPlan costs ${fmt(diff)}/mo less. Simplicity is the simpler, all-inclusive plan — no tier decisions, 10 GB hotspot built in, and flexible financing terms. myPlan is worth considering if the customer wants a device promo.`;
+    }
   }
 
   // myPlan line breakdown
@@ -3501,7 +3876,7 @@ function renderFinancingSection(line, lineIdx, planType) {
     <div class="upgrade-opt-price">${fmt(price)}</div>
   </div>`;
 
-  const promoCredit = line.deviceDeal === "promo" ? calcPromoDeviceCredit(line) : 0;
+  const promoCredit = (line.deviceDeal === "promo" || line.deviceDeal === "retail") ? calcPromoDeviceCredit(line) : 0;
   const effectivePrice = Math.max(0, price - promoCredit);
   const promoNote = promoCredit > 0
     ? `<div style="background:#dcfce7;border-radius:8px;padding:10px;margin-bottom:10px;font-size:12px">
@@ -3708,9 +4083,16 @@ function renderCustomize() {
       // Determine which lines to show toggle for
       const _targetLines = _isAccount
         ? [{ l: state.lines[0], li: 0 }]  // account promos operate on line 0
-        : state.lines.map((l,li) => ({l,li})).filter(({l}) =>
-            !p.applies?.dealTypes || p.applies.dealTypes.includes(l.deviceDeal)
-          );
+        : state.lines.map((l,li) => ({l,li})).filter(({l}) => {
+            if (p.applies?.dealTypes && !p.applies.dealTypes.includes(l.deviceDeal)) return false;
+            // Filter by phone eligibility (same logic as getEligiblePromos)
+            const _ph = l.selectedPhone?.phoneIdx != null ? CONFIG.phones[l.selectedPhone.phoneIdx] : null;
+            if (_ph) {
+              if (p.type === "device" && p.deviceDiscounts && !(_ph.name in p.deviceDiscounts)) return false;
+              if (p.type === "tradein" && p.tiers && !(_ph.name in (p.tiers.tier1||{})) && !(_ph.name in (p.tiers.tier2||{}))) return false;
+            }
+            return true;
+          });
 
       if (!_targetLines.length) return;
 
@@ -4061,7 +4443,8 @@ function buildQuotePayload(empId, custName, custEmail) {
     const perks = l.perkIds.map(pid=>{const p=CONFIG.perks.individual.find(x=>x.id===pid);return p?{id:p.id,name:p.name,price:p.price}:null;}).filter(Boolean);
     const promos = (CONFIG.promotions||[]).filter(p=>isPromoQualified(l,p.id)&&(!p.applies?.planTypes||p.applies.planTypes.includes(pt))).map(p=>({
       id:p.id, name:p.name,
-      device_credit: p.type==="device"?(p.deviceDiscounts?.[device?.name]?.[tier]||0):0,
+      device_credit: p.type==="device"?(p.deviceDiscounts?.[device?.name]?.[tier]||0)
+                    :p.type==="tradein"?(p.tiers?.[l.tradeInTier]?.[device?.name]||0):0,
       monthly_credit: p.discount?.monthly||0,
       label: p.discount?.label||""
     }));
@@ -4656,4 +5039,30 @@ function downloadUpdatedHTML() {
 }
 
 // Email sending uses the EmailJS REST API directly via fetch() — no external library needed
-</script></body></html>
+</script>
+
+<!-- Trade Matrix Modal -->
+<div id="trade-matrix-modal" class="modal-overlay hidden" onclick="if(event.target===this)hideTradeMatrix()">
+  <div class="modal-sheet">
+    <div class="modal-hdr">
+      <div>
+        <div class="modal-hdr-title">Trade Matrix — Tier 1 Devices</div>
+        <div style="font-size:11px;color:var(--gray);margin-top:2px">Effective 4/2/26 · OST 408692</div>
+      </div>
+      <button class="modal-close" onclick="hideTradeMatrix()">✕</button>
+    </div>
+    <div style="padding:10px 16px;border-bottom:1px solid var(--border);flex-shrink:0">
+      <input id="tm-search" class="inp" style="margin-bottom:0;height:40px;font-size:14px" placeholder="Search device name…" oninput="filterTradeMatrix(this.value)">
+    </div>
+    <div class="modal-body">
+      <div class="tm-t2" style="margin-top:0;margin-bottom:10px">
+        <strong>Tier 1:</strong> <span id="tm-content"></span>
+      </div>
+      <div class="tm-t2">
+        <strong>Tier 2:</strong> Any smartphone <em>not</em> listed above (older or off-list devices). Still eligible for trade-in credits — just at the lower Tier 2 amount.
+      </div>
+    </div>
+  </div>
+</div>
+
+</body></html>
